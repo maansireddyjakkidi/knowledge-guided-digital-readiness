@@ -1,19 +1,38 @@
-# Knowledge-guided ML for entrepreneurial digital readiness
+# KG-MRL: Knowledge-guided multisource readiness learning
 
-Minimal reproducible research prototype for a *Knowledge-Based Systems* short communication.
+Reproducible **research software**, not a completed empirical study. Main-text outputs: **exactly two vector PDF figures and two CSV tables**. No fabricated empirical results.
 
-## Run
+## Installation and smoke test
 
 ```bash
 pip install -r requirements.txt
-python experiment.py --demo --out results
-python experiment.py --csv YOUR_DATA.csv --out results
+python experiment.py --demo --out demo_results
 ```
 
-Expected CSV: `digital_skills,cloud_adoption,cybersecurity,finance_access,leadership_support,firm_age,sector,readiness` with binary readiness (0/1). Numeric inputs must be consistently coded. The label must be measured independently of predictors and expert rules to avoid circular evaluation. Missing numeric values are imputed within training folds. The category encoder handles unseen sectors.
+Synthetic mode is **only a software smoke test and controlled simulation**. It is not evidence of firm-level prediction accuracy or model novelty.
 
-Outputs: two vector PDF figures, `metrics.csv`, and out-of-fold predictions. Figures and scores generated with `--demo` are **synthetic software demonstrations only** and must not be presented as findings about firms. `knowledge_rule` is a transparent unvalidated heuristic; replace it with independently elicited, preregistered expert knowledge for substantive research. For actual research, document provenance, consent, inclusion criteria, target construct validity, temporal separation, missingness, class balance, leakage controls, external validation, uncertainty intervals, and fairness/sector subgroup analyses.
+## Real-data experiment
 
-Five-fold stratified cross-validation compares logistic regression, histogram gradient boosting, and a rule-augmented logistic regression. Preprocessing is fit inside folds. Predictions are out of fold. This is a *baseline prototype*, not a demonstrated methodological advance or publication-ready validation. Before claiming novelty, compare to stronger baselines and perform ablations, independent external validation, and significance/uncertainty analysis.
+1. Download a legitimately accessible, documented firm-level dataset (candidate: [World Bank FAT survey](https://microdata.worldbank.org/collections/fat)). Observe its license, access restrictions, and citation requirements.
+2. Construct a **measured and non-circular binary outcome**. A technology adoption indicator that is itself used among predictors **must not** be used as the target. Prefer subsequent adoption if longitudinal measurement exists; otherwise describe a cross-sectional proxy without calling it prospective readiness.
+3. Harmonize features into a local CSV or Parquet file with the columns specified in `knowledge_rules.json`. The default configuration is a **placeholder schema**, not a verified mapping to any World Bank data release. Do not impute missing survey fields with made-up observations. Numeric variables and rule thresholds require documented harmonized units.
+4. Edit `knowledge_rules.json` to define source-specific columns, outcome, group, and independently justified rules. Rule names and thresholds shipped here are **unvalidated hypotheses**, not established domain knowledge.
+5. Run:
 
-Repository intentionally uses only three tracked files; outputs are generated locally. Do not commit confidential firm-level data. MIT-style license not assigned; choose a license before public release.
+```bash
+python experiment.py --data path/to/validated_firms.csv --config knowledge_rules.json --out real_results
+```
+
+## Outputs
+
+- `Table_1_benchmark.csv`: out-of-fold discrimination, precision-recall, Brier score, ECE10, runtime.
+- `Table_2_ablation_stress.csv`: 2x2 source-fusion × knowledge-rule ablation, plus missingness and noise stress tests.
+- `Figure_1_architecture.pdf`: conceptual model and evaluation diagram.
+- `Figure_2_results.pdf`: AUROC and missingness robustness.
+- `out_of_fold_predictions.csv`, `bootstrap_intervals.csv`, `manifest.json`.
+
+GroupKFold is used if a group column is present (e.g., country), otherwise stratified folds. Grouped folds may fail if class distribution is unsuitable; that failure is intentional. Imputation and encoding are fit only on training folds. Stress corruptions affect **test predictors only**, not the outcomes. Bootstrap intervals are descriptive and do not substitute for independent external validation. The knowledge model uses rule-derived predictors; it is **not yet a new constrained-optimization algorithm**, and any novelty claim requires literature comparison and stronger methodological development.
+
+## Important limitations
+
+No real dataset is bundled, no real-data performance is claimed, and no outcome definition or cross-country harmonization has been validated. Synthetic labels depend on constructed predictors. Survey weights, clustering, nested hyperparameter tuning, fairness, temporal validity, and external replication need study-specific decisions before journal submission. Do not publish restricted microdata. The software is a reproducible starting implementation, not a completed *Knowledge-Based Systems* experiment.
