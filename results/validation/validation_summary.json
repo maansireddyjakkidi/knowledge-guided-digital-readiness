@@ -1,0 +1,23 @@
+{
+  "n": 19736,
+  "positives": 679,
+  "groups": 16,
+  "weighted_rows": 19735,
+  "AUROC_constrained_minus_fusion": 0.00019212187482198217,
+  "country_bootstrap_95CI": [
+    -0.00009592144748110654,
+    0.0004252528568293305
+  ],
+  "hypothesis_only_constraints": [
+    "internet",
+    "log_computers"
+  ],
+  "outcome": "Observed advanced marketing analytics adoption, NOT prospective readiness",
+  "limitations": [
+    "Survey weights used only in metric sensitivity, not model fitting",
+    "No strata/PSU design variance; country bootstrap is not design-based inference",
+    "Constraint satisfaction is tautological, not evidence of domain validity",
+    "No nested tuning; model settings fixed",
+    "Survey year not reliably available for true firm age"
+  ]
+}
