@@ -1,0 +1,14 @@
+{
+  "target": "readiness",
+  "numeric": ["digital_skills", "cloud_adoption", "cybersecurity", "finance_access", "leadership_support", "firm_age"],
+  "categorical": ["sector"],
+  "groups": "country",
+  "sources": [
+    {"name": "firm_capabilities", "columns": ["digital_skills", "finance_access", "leadership_support", "firm_age", "sector"]},
+    {"name": "technology_and_security", "columns": ["cloud_adoption", "cybersecurity"]}
+  ],
+  "rules": [
+    {"name": "complementary_capabilities", "features": ["digital_skills", "cloud_adoption", "cybersecurity"], "thresholds": [0, 0, 0], "direction": 1, "status": "HYPOTHESIS_NOT_EXPERT_VALIDATED"},
+    {"name": "leadership_finance_complementarity", "features": ["leadership_support", "finance_access"], "thresholds": [0, 0], "direction": 1, "status": "HYPOTHESIS_NOT_EXPERT_VALIDATED"}
+  ]
+}
