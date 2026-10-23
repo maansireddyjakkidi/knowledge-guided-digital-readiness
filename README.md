@@ -55,3 +55,31 @@ The FAT ZIP must be downloaded by an authorized user from the World Bank and sto
 - **No demonstrated AUROC improvement from knowledge features.** The knowledge interactions are hypotheses, not independently validated expert rules.
 - Unweighted estimates; survey-design adjustment, country-wave sensitivity, construct validity, and independent rule validation remain open.
 - `Table_2_real_ablation_stress.csv` averages fold-level metrics; it should not be directly interpreted as pooled out-of-fold AUROC.
+
+
+## Expanded validation (2026-10-23): executed, not submission-ready
+
+The newer `validation.py` script implements an independently executable sensitivity study:
+
+```bash
+pip install -r requirements.txt
+python validation.py --data WLD_2019-2023_FAT_v01_M_CSV.zip --out validation_results
+```
+
+**Outputs:** `Table_1_validation.csv`, `Table_2_stress.csv`, `rule_diagnostics.csv`, `country_holdout.csv`, `validation_summary.json`, and exactly two vector PDF figures. Aggregated results are checked in under `results/validation/`; the two **current main-text SVG figures** in `figures/` were updated to show validation findings. Prior feasibility outputs in `results/` remain for provenance, not as the latest results.
+
+**Observed dataset:** 19,736 FAT establishments, 679 positive `db11a5` outcomes; 16 country/wave labels. The outcome is observed marketing analytics adoption, **not prospective readiness**.
+
+**Models:** capabilities-only logistic; multisource logistic; multisource logistic with nonnegative coefficients for internet connectivity and log computer count, optimized with bounded L-BFGS-B. The two constraints are **hypotheses**, not externally validated expert rules.
+
+| Model | Unweighted AUROC | AUPRC | Brier | Weighted AUROC |
+|---|---:|---:|---:|---:|
+| Capability | 0.651292 | 0.066964 | 0.032838 | 0.611346 |
+| Fusion | 0.752081 | 0.106681 | 0.032290 | 0.682587 |
+| Constrained | 0.752273 | 0.106805 | 0.032287 | 0.682933 |
+
+Paired constrained minus fusion AUROC: **+0.000192**, country-cluster bootstrap 95% interval **[-0.000096, +0.000425]**. The unconstrained model's two coefficients are positive in **every fold**, so the nonnegative constraints are **not binding**. Their satisfaction does not constitute a demonstrated knowledge-guided benefit; tiny score differences may reflect numerical optimizer differences.
+
+Survey sampling weights are applied to *evaluation metrics only*, not model fitting. These estimates are **not** full complex-survey-design inference. LOCO results cover 15 country labels with both classes; one label has insufficient outcome variation. Fold-level stress results are means of fold metrics, not pooled OOF metrics. The code uses a fixed 2023 proxy for firm age; proper survey-wave harmonization is a further validation requirement. No nested tuning, external replication, prospective target, or independently substantiated knowledge rule is claimed. No original microdata or row-level predictions are committed.
+
+**Interpretation:** multisource predictors are useful; this experiment provides **no persuasive evidence that knowledge constraints improve prediction or robustness**. Do not describe this as a confirmed novel KG-MRL method.
