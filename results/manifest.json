@@ -1,0 +1,12 @@
+{
+  "source": "World Bank FAT 2019-2023",
+  "data_sha256": "6d77d3ffb9dcef2ca4534e1c438ddd2e0b357eb852e6c5b48aa5fa6c3cbe2f0e",
+  "raw_rows": 21055,
+  "analysis_rows": 19736,
+  "outcome": "db11a5: uses big-data analytics / ML for customer marketing (0/1)",
+  "positive": 679,
+  "countries": 16,
+  "cv": "5-fold country GroupKFold",
+  "predictors": ["a7a", "age_2023", "s1b", "manager_tertiary", "internet_yes", "b4a"],
+  "caveats": ["Cross-sectional adoption, not prospective readiness", "Unweighted estimates; survey sampling weights not accounted for", "Knowledge interactions are hypothesized, not externally validated", "Country-wave grouping may need separate sensitivity analysis", "Stress tests corrupt held-out predictors only"]
+}
