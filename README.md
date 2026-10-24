@@ -57,9 +57,34 @@ The FAT ZIP must be downloaded by an authorized user from the World Bank and sto
 - `Table_2_real_ablation_stress.csv` averages fold-level metrics; it should not be directly interpreted as pooled out-of-fold AUROC.
 
 
+
+
+## Manuscript-matched analysis (canonical)
+
+The Knowledge-Based Systems Short Communication reports the matched-objective experiment in `validation_matched.py`. Capability-only, unconstrained multisource, and sign-constrained multisource models share the same ridge logistic loss, zero initialization, L-BFGS-B solver, and training-fold imputation/scaling. The only difference is nonnegative coefficient bounds on internet access and log computer count.
+
+`validation.py` is retained for provenance. It still fits unconstrained models with scikit-learn LogisticRegression and the constrained model with L-BFGS-B, so those three scores are not a matched-objective ablation. Do not use `results/validation/` as the manuscript tables.
+
+```bash
+pip install -r requirements.txt
+python validation_matched.py --data WLD_2019-2023_FAT_v01_M_CSV.zip --out matched_results
+```
+
+Download the FAT ZIP from the World Bank catalog; do not commit microdata. Aggregate outputs are in `results/matched/`. Vector figures: `figures/Figure_1_matched.pdf`, `figures/Figure_2_matched.pdf`.
+
+| Model | Unweighted AUROC | AUPRC | Brier | Weighted AUROC |
+|---|---:|---:|---:|---:|
+| Capability | 0.6514 | 0.0670 | 0.03284 | 0.6115 |
+| Fusion | 0.7523 | 0.1068 | 0.03229 | 0.6829 |
+| Constrained | 0.7523 | 0.1068 | 0.03229 | 0.6829 |
+
+Constrained minus fusion AUROC = 0. Both hypothesized coefficients were positive in all five folds, so the constraints were inactive. Weighted metrics use `base_wt` at evaluation only.
+
+Group labels in the analyzable sample (16): Bangladesh, Brazil, BurkinaFaso, Cambodia, Chile, Croatia, Ethiopia, Georgia, Ghana, India, India_Wave2_New, Kenya, Korea, Poland, Senegal, Vietnam. Ethiopia has 0 positive `db11a5` outcomes, so leave-one-country-out metrics are reported for the other 15 labels. These strings are survey file labels, not a substitute for the official catalog citation.
+
 ## Expanded validation (2026-10-23): executed, not submission-ready
 
-The newer `validation.py` script implements an independently executable sensitivity study:
+The older `validation.py` script is an unmatched-objective sensitivity study (provenance only):
 
 ```bash
 pip install -r requirements.txt
